@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="generator-input" class="form-control" type="text" placeholder="Click Generate Pin">
+                    <button id="generate-btn" class="generate-btn">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input id="calc-input" class="form-control" type="text" placeholder="Enter Generalized Code">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div onclick="getInput(7)" class="button">7</div>
+                              <div onclick="getInput(8)" class="button">8</div>
+                              <div onclick="getInput(9)" class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick="getInput(4)" class="button">4</div>
+                              <div onclick="getInput(5)" class="button">5</div>
+                              <div onclick="getInput(6)" class="button">6</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick="getInput(1)" class="button">1</div>
+                              <div onclick="getInput(2)" class="button">2</div>
+                              <div onclick="getInput(3)" class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div onclick="getInput('<')" class="button"><</div>
+                                <div onclick="getInput(0)" class="button">0</div>
+                                <div onclick="getInput('c')" class="button">C</div>
+                            </div>
+                            <div>
+                                <button id="submit-btn" type="submit" class="submit-btn">Submit</button>
+                                <p class="action-left">3 try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p id="mismatch-notify" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="match-notify" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("match-notify").style.display="none";
+        document.getElementById("mismatch-notify").style.display="none";
+
+        function getInput(btnNo){
+            document.getElementById("calc-input").value+=btnNo; 
+             if(btnNo=='c'){
+                document.getElementById("calc-input").value = ''; 
+             }
+             if(btnNo == '<'){
+               let removeItem =  document.getElementById("calc-input").value; 
+               for(let i = 0 ; i<=removeItem.length ; i++){
+                   var element = removeItem.substring(0, removeItem.length - 2);
+                   document.getElementById("calc-input").value = element; 
+               }
+             }
+        }
+        document.getElementById("generate-btn").addEventListener("click" , function(){
+            const generatorInput = document.getElementById("generator-input").value;
+            let n = Math.round(1000 + Math.random(generatorInput) * 9000);
+            document.getElementById("generator-input").value = n;
+        });
+        document.getElementById("submit-btn").addEventListener("click" ,function(){
+            const clacInput = document.getElementById("calc-input").value;
+            const generatorInput = document.getElementById("generator-input").value; 
+            if(clacInput == generatorInput){
+                document.getElementById("match-notify").style.display="block";
+                play('grab_mission_success.mp3');
+            }
+            if(clacInput != generatorInput){
+                document.getElementById("mismatch-notify").style.display="block";
+                document.getElementById("match-notify").style.display="none";
+                play('failure_notification.mp3')
+            }
+
+        });
+      function play(tone){
+          var audio = new Audio(tone);
+          audio.play();
+      };  
+    </script>
+</body>
+</html>
